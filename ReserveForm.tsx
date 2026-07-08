@@ -7,34 +7,49 @@ interface ReserveFormProps {
   onSubmit: (data: CreateReservationRequest) => void;
 }
 
-export const ReserveForm: React.FC<ReserveFormProps> = ({ selectedRoomName, selectedRoomId, onSubmit }) => {
-  const [startAt, setStartAt] = useState<string>('');
-  const [endAt, setEndAt] = useState<string>('');
-  const [purpose, setPurpose] = useState<string>('');
+export const ReserveForm = ({ selectedRoomName, selectedRoomId, onSubmit }: ReserveFormProps) => {
+  // フォームの入力値を1つのオブジェクト型Stateに集約
+  const [form, setForm] = useState({
+    startAt: '',
+    endAt: '',
+    purpose: '',
+  });
+  
   const [error, setError] = useState<string | null>(null);
+
+  // すべての入力を一括で処理する変更ハンドラー
+  const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
+    setForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // 簡易バリデーション
-    if (new Date(startAt) >= new Date(endAt)) {
+    // 簡易日時バリデーション
+    if (new Date(form.startAt) >= new Date(form.endAt)) {
       setError('終了日時は開始日時よりも後の時間を指定してください。');
       return;
     }
 
-    // 親（ボス）コンポーネントにデータを渡す
+    // ボス（Dashboard）に入力データを渡す
     onSubmit({
       roomId: selectedRoomId,
-      startAt: new Date(startAt).toISOString(),
-      endAt: new Date(endAt).toISOString(),
-      purpose: purpose || undefined,
+      startAt: new Date(form.startAt).toISOString(),
+      endAt: new Date(form.endAt).toISOString(),
+      purpose: form.purpose || undefined,
     });
 
-    // フォームを空にする
-    setStartAt('');
-    setEndAt('');
-    setPurpose('');
+    // フォームをまとめて初期化
+    setForm({
+      startAt: '',
+      endAt: '',
+      purpose: '',
+    });
   };
 
   return (
@@ -44,34 +59,40 @@ export const ReserveForm: React.FC<ReserveFormProps> = ({ selectedRoomName, sele
 
       <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '20px' }}>
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>開始日時</label>
+          <label htmlFor="startAt" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>開始日時</label>
           <input 
+            id="startAt"
+            name="startAt"
             type="datetime-local" 
-            value={startAt}
-            onChange={(e) => setStartAt(e.target.value)}
+            value={form.startAt}
+            onChange={handleForm}
             style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
             required
           />
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>終了日時</label>
+          <label htmlFor="endAt" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>終了日時</label>
           <input 
+            id="endAt"
+            name="endAt"
             type="datetime-local" 
-            value={endAt}
-            onChange={(e) => setEndAt(e.target.value)}
+            value={form.endAt}
+            onChange={handleForm}
             style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
             required
           />
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>利用目的（任意）</label>
+          <label htmlFor="purpose" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>利用目的（任意）</label>
           <input 
+            id="purpose"
+            name="purpose"
             type="text" 
             placeholder="例: チーム定例"
-            value={purpose}
-            onChange={(e) => setPurpose(e.target.value)}
+            value={form.purpose}
+            onChange={handleForm}
             style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </div>

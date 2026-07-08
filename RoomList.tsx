@@ -7,7 +7,7 @@ interface RoomListProps {
   onSelectRoom: (id: number) => void;
 }
 
-export const RoomList: React.FC<RoomListProps> = ({ rooms, selectedRoomId, onSelectRoom }) => {
+export const RoomList = ({ rooms, selectedRoomId, onSelectRoom }: RoomListProps) => {
   return (
     <div style={{ flex: 1 }}>
       <h2>会議室一覧</h2>
@@ -35,3 +35,5 @@ export const RoomList: React.FC<RoomListProps> = ({ rooms, selectedRoomId, onSel
     </div>
   );
 };
+
+export default RoomList;
