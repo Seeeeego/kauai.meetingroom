@@ -1,3 +1,4 @@
+// 会議室情報
 export interface Room {
   id: number;
   name: string;
@@ -5,6 +6,7 @@ export interface Room {
   description?: string;
 }
 
+// 予約フォーム
 export interface CreateReservationRequest {
   roomId: number;
   startAt: string;
@@ -12,11 +14,11 @@ export interface CreateReservationRequest {
   purpose?: string;
 }
 
-// 💡 追加：画面に表示するための予約データの型
+// 予約状況管理
 export interface Reservation {
-  id: string; // 一意のID
-  roomName: string; // 会議室名
-  startAt: string; // 開始日時
-  endAt: string; // 終了日時
-  purpose: string; // 利用目的
+  id: string; 
+  roomName: string; 
+  startAt: string; 
+  endAt: string; 
+  purpose: string;
 }

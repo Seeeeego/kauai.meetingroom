@@ -26,7 +26,7 @@ export const ReserveForm = ({ selectedRoomName, selectedRoomId, onSubmit }: Rese
     }));
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -36,10 +36,10 @@ export const ReserveForm = ({ selectedRoomName, selectedRoomId, onSubmit }: Rese
       return;
     }
 
-    // ボス（Dashboard）に入力データを渡す
+    //　Dashboardに入力データを渡す
     onSubmit({
       roomId: selectedRoomId,
-      startAt: new Date(form.startAt).toISOString(),
+      startAt: new Date(form.startAt).toISOString(), //toISOStringで日本時間を標準時に直している
       endAt: new Date(form.endAt).toISOString(),
       purpose: form.purpose || undefined,
     });

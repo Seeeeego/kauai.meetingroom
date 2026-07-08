@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import type { Room, CreateReservationRequest, Reservation } from './type'; // 💡 Reservationを追加
+import { useState } from 'react';
+import type { Room, CreateReservationRequest, Reservation } from './type'; 
 import { RoomList } from './RoomList';
 import { ReserveForm } from './ReserveForm';
 
@@ -14,7 +14,6 @@ export const Dashboard = () => {
   const [selectedRoomId, setSelectedRoomId] = useState<number>(MOCK_ROOMS[0].id);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // 💡 追加：予約一覧を管理するState（初期状態は空配列）
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
   const selectedRoom = rooms.find(r => r.id === selectedRoomId) || rooms[0];
@@ -28,7 +27,7 @@ export const Dashboard = () => {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit'
-    });
+    }); // 日本時間に再変更
   };
 
   const handleReserveSubmit = (data: CreateReservationRequest) => {
@@ -36,7 +35,6 @@ export const Dashboard = () => {
     
     console.log('API送信データ:', data);
 
-    // 💡 追加：新しい予約オブジェクトを作成して、既存の一覧（State）の先頭に追加
     const newReservation: Reservation = {
       id: crypto.randomUUID(), // ランダムなユニークIDを生成
       roomName: selectedRoom.name,
@@ -54,7 +52,7 @@ export const Dashboard = () => {
 
   return (
     <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'sans-serif' }}>
-      <h1 style={{ borderBottom: '2px solid #eee', paddingBottom: '10px' }}>会議室予約ダッシュボード</h1>
+      <h1 style={{ borderBottom: '2px solid #eee', paddingBottom: '10px' }}>会議室予約システム</h1>
       
       {successMessage && (
         <div style={{ backgroundColor: '#e6f4ea', color: '#137333', padding: '16px', borderRadius: '4px', margin: '16px 0', fontWeight: 'bold' }}>
@@ -62,7 +60,6 @@ export const Dashboard = () => {
         </div>
       )}
 
-      {/* 上段：会議室選択と予約フォーム */}
       <div style={{ display: 'flex', gap: '32px', marginTop: '24px' }}>
         <RoomList 
           rooms={rooms} 
@@ -77,7 +74,6 @@ export const Dashboard = () => {
         />
       </div>
 
-      {/* 💡 追加：下段に予約一覧をその場で表示 */}
       <div style={{ marginTop: '48px', borderTop: '2px solid #eee', paddingTop: '24px' }}>
         <h2>現在の予約一覧</h2>
         {reservations.length === 0 ? (
